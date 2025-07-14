@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -56,12 +55,13 @@ export default function HomePage() {
   ];
 
   const nextSlide = () => {
-    setCurrentSlide((prev: any) => (prev + 1) % carouselImages.length);
+    setCurrentSlide((prev: number) => (prev + 1) % carouselImages.length);
   };
 
   const prevSlide = () => {
     setCurrentSlide(
-      (prev: any) => (prev - 1 + carouselImages.length) % carouselImages.length
+      (prev: number) =>
+        (prev - 1 + carouselImages.length) % carouselImages.length
     );
   };
 
@@ -74,10 +74,10 @@ export default function HomePage() {
       nextSlide();
     }, 6500);
 
-    () => clearInterval(timer);
-    () => clearInterval(timerSlide);
-
-    return;
+    return () => {
+      clearInterval(timer);
+      clearInterval(timerSlide);
+    };
   }, []);
 
   const features = [
