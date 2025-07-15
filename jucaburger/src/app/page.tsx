@@ -13,11 +13,12 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isChanging, setIsChanging] = useState(false);
 
   const carouselImages = [
     {
@@ -54,24 +55,97 @@ export default function HomePage() {
     },
   ];
 
-  const nextSlide = () => {
-    setCurrentSlide((prev: number) => (prev + 1) % carouselImages.length);
-  };
+  const nextSlide = useCallback(() => {
+    if (isChanging) return; // Previne múltiplas transições simultâneas
 
-  const prevSlide = () => {
-    setCurrentSlide(
-      (prev: number) =>
-        (prev - 1 + carouselImages.length) % carouselImages.length
-    );
-  };
+    setIsChanging(true);
+    setCurrentSlide((prev) => {
+      const nextIndex = (prev + 1) % carouselImages.length;
+      return nextIndex;
+    });
+
+    // Reset do estado após a transição
+    setTimeout(() => {
+      setIsChanging(false);
+    }, 1000);
+  }, [isChanging]);
+
+  const prevSlide = useCallback(() => {
+    if (isChanging) return; // Previne múltiplas transições simultâneas
+
+    setIsChanging(true);
+    setCurrentSlide((prev) => {
+      const prevIndex =
+        (prev - 1 + carouselImages.length) % carouselImages.length;
+      return prevIndex;
+    });
+
+    // Reset do estado após a transição
+    setTimeout(() => {
+      setIsChanging(false);
+    }, 1000);
+  }, [isChanging]);
+
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (isChanging || index === currentSlide) return;
+
+      setIsChanging(true);
+      setCurrentSlide(index);
+
+      setTimeout(() => {
+        setIsChanging(false);
+      }, 1000);
+    },
+    [isChanging, currentSlide]
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
       setIsLoading(false);
     }, 2500);
 
+    const timerSlide = setInterval(() => {
+      if (!isChanging) {
+        nextSlide();
+      }
+    }, 6500);
+
     return () => {
       clearInterval(timer);
+      clearInterval(timerSlide);
+    };
+  }, [nextSlide, isChanging]);
+
+  // Preload das imagens para evitar flickering
+  useEffect(() => {
+    const preloadImages = () => {
+      carouselImages.forEach((image, index) => {
+        const img = new Image();
+        img.src = image.src;
+        // Prioriza o carregamento das primeiras imagens
+        if (index <= 2) {
+          img.loading = "eager";
+        }
+      });
+    };
+
+    preloadImages();
+  }, []);
+
+  // Pausa o auto-play quando o usuário interage
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Pausa as transições quando a aba não está visível
+        setIsChanging(false);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -323,34 +397,36 @@ export default function HomePage() {
             <div className="relative overflow-hidden rounded-2xl bg-black/20 backdrop-blur-sm border border-white/20">
               <div className="relative h-64 sm:h-80 md:h-96 lg:h-[500px]">
                 {carouselImages.map((image, index) => (
-                  <motion.div
+                  <div
                     key={index}
                     className={`absolute inset-0 transition-opacity duration-700 ${
                       index === currentSlide ? "opacity-100" : "opacity-0"
                     }`}
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{
-                      opacity: index === currentSlide ? 1 : 0,
-                      scale: index === currentSlide ? 1 : 1.1,
+                    style={{
+                      transform: "translateZ(0)", // Force hardware acceleration
+                      backfaceVisibility: "hidden", // Prevent flickering
+                      willChange: index === currentSlide ? "opacity" : "auto",
                     }}
-                    transition={{ duration: 0.7 }}
                   >
                     <img
                       src={image.src}
                       alt={image.alt}
                       className="w-full h-full object-cover"
+                      style={{
+                        transform: "translateZ(0)",
+                        backfaceVisibility: "hidden",
+                      }}
+                      loading={index === 0 ? "eager" : "lazy"}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
 
                     {/* Image Info Overlay */}
-                    <motion.div
-                      className="absolute bottom-4 left-4 right-4 mb-4 sm:bottom-6 sm:left-6 sm:right-6 text-white"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{
-                        opacity: index === currentSlide ? 1 : 0,
-                        y: index === currentSlide ? 0 : 20,
-                      }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
+                    <div
+                      className={`absolute bottom-4 left-4 right-4 mb-4 sm:bottom-6 sm:left-6 sm:right-6 text-white transition-all duration-1000 ease-in-out ${
+                        index === currentSlide
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 translate-y-4"
+                      }`}
                     >
                       <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/20">
                         <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2">
@@ -360,8 +436,8 @@ export default function HomePage() {
                           {image.description}
                         </p>
                       </div>
-                    </motion.div>
-                  </motion.div>
+                    </div>
+                  </div>
                 ))}
               </div>
 
