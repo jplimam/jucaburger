@@ -68,7 +68,7 @@ export default function HomePage() {
     setTimeout(() => {
       setIsChanging(false);
     }, 1000);
-  }, [isChanging]);
+  }, [isChanging, carouselImages.length]);
 
   const prevSlide = useCallback(() => {
     if (isChanging) return; // Previne múltiplas transições simultâneas
@@ -84,21 +84,7 @@ export default function HomePage() {
     setTimeout(() => {
       setIsChanging(false);
     }, 1000);
-  }, [isChanging]);
-
-  const goToSlide = useCallback(
-    (index: number) => {
-      if (isChanging || index === currentSlide) return;
-
-      setIsChanging(true);
-      setCurrentSlide(index);
-
-      setTimeout(() => {
-        setIsChanging(false);
-      }, 1000);
-    },
-    [isChanging, currentSlide]
-  );
+  }, [isChanging, carouselImages.length]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -462,7 +448,15 @@ export default function HomePage() {
                 {carouselImages.map((_, index) => (
                   <button
                     key={index}
-                    onClick={() => setCurrentSlide(index)}
+                    onClick={() => {
+                      if (!isChanging && index !== currentSlide) {
+                        setIsChanging(true);
+                        setCurrentSlide(index);
+                        setTimeout(() => {
+                          setIsChanging(false);
+                        }, 1000);
+                      }
+                    }}
                     className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
                       index === currentSlide
                         ? "bg-white scale-125"
