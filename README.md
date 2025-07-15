@@ -35,7 +35,7 @@ O layout foi cuidadosamente projetado para oferecer uma ótima experiência tant
 
 ## 📸 Captura de tela
 
-![Screenshot do JucaBurger](https://jucaburger.vercel.app/screenshot.jpg) <!-- Substitua com uma imagem real se quiser -->
+![Screenshot do JucaBurger](./jucaburger/public/screenshot-jucaburger.png) <!-- Substitua com uma imagem real se quiser -->
 
 ---
 
@@ -45,4 +45,4 @@ Entre em contato para projetos semelhantes ou personalizações:
 
 **João Pedro Lima**  
 Desenvolvedor Fullstack  
-[jplimam](https://github.com/jplimam) • [LinkedIn](https://www.linkedin.com/in/jplimam)  
+[jplimam](https://github.com/jplimam) • [LinkedIn](https://www.linkedin.com/in/jplimam)
