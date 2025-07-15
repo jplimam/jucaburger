@@ -1,7 +1,7 @@
 "use client";
 
+import SpotlightCard from "@/blocks/Components/SpotlightCard/SpotlightCard";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -516,21 +516,22 @@ export default function HomePage() {
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 viewport={{ once: true }}
               >
-                <Card className="bg-black/20 border-white/20 hover:bg-black/30 transition-all duration-300 h-full backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="p-2 bg-red-600/20 rounded-lg text-red-100 mr-3">
-                        {feature.icon}
-                      </div>
-                      <h3 className="text-lg font-semibold text-white">
-                        {feature.title}
-                      </h3>
+                <SpotlightCard
+                  spotlightColor="rgba(166, 3, 17, 0.2)"
+                  className="custom-spotlight-card bg-black/20 border-white/20 transition-all duration-300 h-full backdrop-blur-sm"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="p-2 bg-red-600/20 rounded-lg text-red-100 mr-3">
+                      {feature.icon}
                     </div>
-                    <p className="text-orange-100 text-sm font-medium leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </CardContent>
-                </Card>
+                    <h3 className="text-lg font-semibold text-white">
+                      {feature.title}
+                    </h3>
+                  </div>
+                  <p className="text-orange-100 text-sm font-medium leading-relaxed">
+                    {feature.description}
+                  </p>
+                </SpotlightCard>
               </motion.div>
             ))}
           </div>
@@ -584,33 +585,34 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Card className="bg-gradient-to-r from-red-600/20 to-yellow-600/20 border-white/20 backdrop-blur-sm">
-              <CardContent className="p-6 sm:p-8 lg:p-12">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl text-white font-bold mb-4">
-                  Fome de verdade?
-                </h2>
-                <p className="text-orange-100 text-base font-medium sm:text-lg mb-8 max-w-2xl mx-auto">
-                  Não perca tempo! Faça seu pedido agora e receba em casa o
-                  hambúrguer dos seus sonhos.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button
-                    size="lg"
-                    className="w-full cursor-pointer sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    Pedir Delivery
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full bg-green-700 sm:w-auto cursor-pointer border-green-700 text-white hover:bg-white/10 hover:text-black px-8 py-3 rounded-xl"
-                  >
-                    WhatsApp
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <SpotlightCard
+              spotlightColor="rgba(166, 3, 17, 0.2)"
+              className="custom-spotlight-card bg-gradient-to-r from-red-600/20 to-yellow-600/20 border-white/20 backdrop-blur-sm"
+            >
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl text-white font-bold mb-4">
+                Fome de verdade?
+              </h2>
+              <p className="text-orange-100 text-base font-medium sm:text-lg mb-8 max-w-2xl mx-auto">
+                Não perca tempo! Faça seu pedido agora e receba em casa o
+                hambúrguer dos seus sonhos.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  size="lg"
+                  className="w-full cursor-pointer sm:w-auto bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Pedir Delivery
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full bg-green-700 sm:w-auto cursor-pointer border-green-700 text-white hover:bg-white/10 hover:text-black px-8 py-3 rounded-xl"
+                >
+                  WhatsApp
+                </Button>
+              </div>
+            </SpotlightCard>
           </motion.div>
         </div>
       </section>
