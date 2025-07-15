@@ -70,13 +70,8 @@ export default function HomePage() {
       setIsLoading(false);
     }, 2500);
 
-    const timerSlide = setInterval(() => {
-      nextSlide();
-    }, 6500);
-
     return () => {
       clearInterval(timer);
-      clearInterval(timerSlide);
     };
   }, []);
 
